@@ -16,16 +16,13 @@
 
 ### 反义词库
 
-基于一级字（常用字）通过 GLM-5 API �定的反义词对。
+融合《反义词大全》PDF 与 GLM-5 API 判定结果。
 
-| 类别 | 数量 | 示例 |
-|------|------|------|
-| 方位空间 | - | 上下、左右、东西、南北 |
-| 状态属性 | - | 冷热、明暗、干湿、软硬 |
-| 时间 | - | 古今、早晚、昼夜 |
-| 数量程度 | - | 多少、大小、长短 |
-| 逻辑价值 | - | 真假、善恶、美丑 |
-| 动作行为 | - | 进退、买卖、开关 |
+| 来源 | 数量 |
+|------|------|
+| PDF《反义词大全》 | 986 对 |
+| GLM-5 API 判定 | 858 对 |
+| **融合总计** | **1715 对** |
 
 ## 文件结构
 
@@ -38,7 +35,8 @@ data/
 └── chars-all.txt              # 全部汉字（纯文本）
 
 antonyms/
-├── antonyms-final.json        # 反义词库（基于一级字判定）
+├── antonyms-merged.json       # 融合反义词库（1715对）⭐
+├── antonyms-glm5.json         # GLM-5判定结果（858对）
 └── pairs-batches.json         # 候选对数据（原始）
 ```
 
@@ -49,16 +47,32 @@ antonyms/
 ```json
 {
   "total_chars": 7829,
-  "total_content_chars": 7789,
   "levels": {
-    "level1": {
-      "name": "一级字表",
-      "description": "常用字，3500字",
-      "all_chars": ["一", "乙", "二", ...],
-      "content_chars": ["一", "乙", "二", ...]
-    },
-    ...
+    "level1": { "name": "一级字表", "all_chars": ["一", "乙", ...] },
+    "level2": { "name": "二级字表", "all_chars": ["乜", "兀", ...] },
+    "level3": { "name": "三级字表", "all_chars": ["亍", "尢", ...] }
   }
+}
+```
+
+### antonyms-merged.json
+
+```json
+{
+  "metadata": {
+    "total": 1715,
+    "pdf_count": 986,
+    "glm_count": 858,
+    "both_count": 129
+  },
+  "antonyms": [
+    {
+      "char1": "上",
+      "char2": "下",
+      "pair": "上-下",
+      "source": "PDF+GLM-5"
+    }
+  ]
 }
 ```
 
@@ -73,11 +87,9 @@ antonyms/
 
 ## 数据来源
 
-- [《通用规范汉字表》2013版](https://www.gov.cn/zwgk/2013-08/19/content_2466008.htm) - 国务院发布
-- 本仓库数据从公开PDF提取整理
+- [《通用规范汉字表》2013版](https://www.gov.cn/zwgk/2013-08/19/content_2466008.htm)
+- 《反义词大全》PDF
 
 ## License
 
 CC0 1.0 Universal (公共领域)
-
-原始数据由中华人民共和国政府发布，属于公共领域资源。

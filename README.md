@@ -16,13 +16,24 @@
 
 ### 反义词库
 
-融合《反义词大全》PDF 与 GLM-5 API 判定结果。
+融合《反义词大全》PDF 与 GLM-5 API 判定结果，带二级分类体系。
 
 | 来源 | 数量 |
 |------|------|
 | PDF《反义词大全》 | 986 对 |
 | GLM-5 API 判定 | 858 对 |
 | **融合总计** | **1715 对** |
+
+#### 分类体系
+
+| 一级分类 | 数量 | 图标 |
+|---------|------|------|
+| 动作行为 | 436 | 👆 |
+| 品质评价 | 335 | ⭐ |
+| 状态性质 | 259 | 🔄 |
+| 关系情态 | 376 | 🔗 |
+| 时空方位 | 138 | 📍 |
+| 数量程度 | 171 | 📊 |
 
 ## 文件结构
 
@@ -35,46 +46,57 @@ data/
 └── chars-all.txt              # 全部汉字（纯文本）
 
 antonyms/
-├── antonyms-merged.json       # 融合反义词库（1715对）⭐
-├── antonyms-glm5.json         # GLM-5判定结果（858对）
+├── antonyms-classified.json   # 反义词库（带二级分类）⭐
+├── antonyms-merged.json       # 反义词库（基础版）
+├── antonyms-glm5.json         # GLM-5判定结果
 └── pairs-batches.json         # 候选对数据（原始）
 ```
 
 ## 数据格式
 
-### chars-official.json
-
-```json
-{
-  "total_chars": 7829,
-  "levels": {
-    "level1": { "name": "一级字表", "all_chars": ["一", "乙", ...] },
-    "level2": { "name": "二级字表", "all_chars": ["乜", "兀", ...] },
-    "level3": { "name": "三级字表", "all_chars": ["亍", "尢", ...] }
-  }
-}
-```
-
-### antonyms-merged.json
+### antonyms-classified.json
 
 ```json
 {
   "metadata": {
     "total": 1715,
-    "pdf_count": 986,
-    "glm_count": 858,
-    "both_count": 129
+    "description": "中文反义词库 - 带二级分类",
+    "updated": "2026-03-01T20:00:00+08:00",
+    "categories": [...]
+  },
+  "categories": {
+    "动作行为": {
+      "icon": "👆",
+      "description": "各种对立的动作和行为",
+      "subcategories": ["动作", "升降", "取舍", ...]
+    },
+    ...
   },
   "antonyms": [
     {
       "char1": "上",
       "char2": "下",
       "pair": "上-下",
-      "source": "PDF+GLM-5"
+      "source": "PDF+GLM-5",
+      "category1": "时空方位",
+      "category2": "上下",
+      "reason": "方位对立"
     }
   ]
 }
 ```
+
+## 字段说明
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| char1 | 第一个字 | "上" |
+| char2 | 第二个字 | "下" |
+| pair | 反义词对 | "上-下" |
+| source | 数据来源 | "PDF+GLM-5", "PDF", "GLM-5" |
+| category1 | 一级分类 | "时空方位" |
+| category2 | 二级分类 | "上下" |
+| reason | 语义说明（可选） | "方位对立" |
 
 ## 使用场景
 
